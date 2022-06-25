@@ -5,12 +5,14 @@ import { Notify } from 'notiflix/build/notiflix-notify-aio';
 let targetDate = Date.now();
 let countdown = 0;
 
-const input = document.querySelector('#datetime-picker')
-const btn = document.querySelector('.timer-btn');
-const targetDays = document.querySelector('span[data-days]');
-const targetHours = document.querySelector('span[data-hours]');
-const targetMinutes = document.querySelector('span[data-minutes]');
-const targetSeconds = document.querySelector('span[data-seconds]');
+const refs = {
+    input: document.querySelector('#datetime-picker'),
+    btn: document.querySelector('.timer-btn'),
+    targetDays: document.querySelector('span[data-days]'),
+    targetHours: document.querySelector('span[data-hours]'),
+    targetMinutes: document.querySelector('span[data-minutes]'),
+    targetSeconds: document.querySelector('span[data-seconds]'),
+};
 
 const options = {
   enableTime: true,
@@ -21,35 +23,36 @@ const options = {
       targetDate = selectedDates[0].getTime();
 
       if (selectedDates[0] <= Date.now()) {
-          Notify.failure('Please choose a date in the future', {
-              timeout: 4000,
-              clickToClose: true,
-              distance: '3%',
-              opacity: 0.9,
-                borderRadius: '4px',
-          });
-      } else {
-          btn.disabled = false;
-      }
+        refs.btn.disabled = true;
+        Notify.failure('Please choose a date in the future', {
+            timeout: 3500,
+            clickToClose: true,
+            distance: '3%',
+            opacity: 0.9,
+            borderRadius: '4px',
+        });
+    } else {
+        refs.btn.disabled = false;
+        }
   },
 };
 
 flatpickr('#datetime-picker', options);
 
-btn.disabled = true;
-btn.addEventListener('click', onBtnClick);
+refs.btn.disabled = true;
+refs.btn.addEventListener('click', onBtnClick);
 
 function onBtnClick() {
-    btn.disabled = true;
-    input.disabled = true;
+    refs.btn.disabled = true;
+    refs.input.disabled = true;
     countdown = setInterval(startTimer, 1000);
     Notify.success('Countdown begins', {
-              timeout: 4000,
-              clickToClose: true,
-              distance: '3%',
-              opacity: 0.9,
-                borderRadius: '4px',
-          });
+        timeout: 3500,
+        clickToClose: true,
+        distance: '3%',
+        opacity: 0.9,
+        borderRadius: '4px',
+    });
 };
 
 function startTimer() {
@@ -58,9 +61,9 @@ function startTimer() {
 
     if (delta < 0) {
         clearInterval(countdown);
-        input.disabled = false;
+        refs.input.disabled = false;
         Notify.info('The countdown is over', {
-            timeout: 4000,
+            timeout: 3500,
             clickToClose: true,
             distance: '3%',
             opacity: 0.9,
@@ -70,13 +73,13 @@ function startTimer() {
         };
 
         renderTimer(convertMs(delta));
-    }
+};
 
 function renderTimer(date) {
-    targetDays.innerText = addLeadingZero(date.days);
-    targetHours.innerText = addLeadingZero(date.hours);
-    targetMinutes.innerText = addLeadingZero(date.minutes);
-    targetSeconds.innerText = addLeadingZero(date.seconds);
+    refs.targetDays.innerText = addLeadingZero(date.days);
+    refs.targetHours.innerText = addLeadingZero(date.hours);
+    refs.targetMinutes.innerText = addLeadingZero(date.minutes);
+    refs.targetSeconds.innerText = addLeadingZero(date.seconds);
 };
 
 function convertMs(ms) {
